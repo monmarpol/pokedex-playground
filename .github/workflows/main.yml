@@ -26,6 +26,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
           set -e
+          echo $(git rev-parse --show-toplevel)
           gh pr checkout ${{ github.event.inputs.pullRequestNumber }}
           echo "REF=$(git symbolic-ref HEAD)" >> "$GITHUB_OUTPUT"
         env:

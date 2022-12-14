@@ -1,0 +1,44 @@
+name: Test dla Mariuszka
+
+on:
+  workflow_dispatch:
+    inputs:
+      pullRequestNumber:
+        description: Pull Request number for correct placement of apps
+        required: true
+  pull_request_target:
+    types: [opened, synchronize]
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode_14.0.1.app/Contents/Developer
+
+jobs:
+  getBranchHeadRef:
+    runs-on: ubuntu-latest
+    outputs:
+      REF: ${{steps.getHeadSha.outputs.REF}}
+    steps:
+      - name: Checkout
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+      - name: Check if pull request number is correct
+        id: getHeadSha
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          set -e
+          gh pr checkout ${{ github.event.inputs.pullRequestNumber }}
+          echo "REF=$(git symbolic-ref HEAD)" >> "$GITHUB_OUTPUT"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  verifyHash:
+    name: Build and deploy Android for testing
+    needs: [getBranchHeadRef]
+    runs-on: ubuntu-latest
+    env:
+      BRANCH_HASH: ${{ needs.getBranchHeadRef.outputs.REF }}
+    steps:
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        with:
+          ref: ${{ github.head_ref || needs.getBranchHeadRef.outputs.REF }}
+          fetch-depth: 0

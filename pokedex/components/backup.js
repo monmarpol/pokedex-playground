@@ -27,6 +27,7 @@ const PokemonDetails = props => {
             const pkInfo = await axios.get(`https://pokeapi.co/api/v2/pokemon/${inputValue}`);
                 setPokemonInfo(pkInfo.data)
                 
+                
             const spInfo = await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${inputValue}`)
                 setSpeciesInfo(spInfo.data)
                 setDescriptionIndex(spInfo.data.flavor_text_entries.findIndex(x => x.language.name === 'en'))

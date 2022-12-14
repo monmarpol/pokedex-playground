@@ -7,6 +7,7 @@ import styleType from '../constants/backgroundTypes'
 import myButton from '../constants/myButton'
 
 
+
 const PokemonDetails = props => {
     const [pokemonInfo, setPokemonInfo] = useState('')
     const [speciesInfo, setSpeciesInfo] = useState('')

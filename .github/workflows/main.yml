@@ -26,9 +26,8 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
           set -e
-          echo $(git rev-parse --show-toplevel)
           gh pr checkout ${{ github.event.inputs.pullRequestNumber }}
-          echo "REF=$(git rev-parse --abbrev-ref HEAD)" >> "$GITHUB_OUTPUT"
+          echo "REF=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -42,5 +41,4 @@ jobs:
       - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
         with:
           ref: ${{ github.event.pull_request.head.ref || needs.getBranchHeadRef.outputs.REF }}
-          repository: 'monmarpol/pokedex-playground'
           fetch-depth: 0

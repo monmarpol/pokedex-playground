@@ -9,7 +9,7 @@ const myButton = props => {
 
 const styles = StyleSheet.create({
     button: {
-        height: 40,
+        height: 42,
         width: 100,
         margin: 15,
         padding: 20,
